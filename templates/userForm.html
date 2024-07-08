@@ -1,0 +1,204 @@
+{% load static %} 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Details Form</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <style>
+        .hidden {
+            /* display: none; */
+            background-color: rgb(255, 0, 234);
+        }
+        .horizontal-radio {
+            display: flex;
+            gap: 10px; /* Adjust the gap between radio buttons as needed */
+        }
+        .horizontal-radio label {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Adjust the gap between the radio button and label */
+        }
+    </style>
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="{% static 'css/bg3.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="heading">
+        <h1>Configuration Details</h1>
+    </div>
+    <div class="fullpart">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="operating">
+                <label for="id_operating_system">Operating System:</label>
+                <div class ="option">
+                    {{ form.operating_system }}
+                </div>
+            </div>
+            
+            <div class ="url">
+                <label for="id_proxy_url">Enter proxy URL</label>
+                {{ form.proxy_URL }}
+            </div>
+
+
+            <div class ="api">
+                <label for="id_end_point">API End Point:</label>
+                {{ form.end_point }}
+            </div>
+
+            <div class="limit">
+                <label for="id_request_limit">Request Limit:</label>
+                {{ form.request_limit }}
+                
+            </div>
+
+            <div class="limitchoice ">
+                <label for="id_request_limit_choice">Request Limit Choice:</label>
+            <div class="option">
+                {{ form.request_limit_unit }}
+            </div> 
+            </div>
+
+
+            <div class="private">
+                <label for="id_block_all_private_ips">Block All Private IPs:</label>
+
+                <div class="option">
+                {{ form.block_all_private_ips }}
+                </div>
+                
+            </div>
+            
+            <div id="private-ip-section" class="hidden">
+                <label for="id_number_of_private_ips">Number of Specific Private IPs:</label>
+                {{ form.number_of_private_ips }}
+                
+                <div id="private-ip-fields" class="generater">
+                    <!-- JavaScript will generate IP input fields here -->
+                </div>
+            </div>
+            
+            <div class="public">
+                <label for="id_block_all_public_ips">Block All Public IPs:</label>
+
+                <div class="option">
+                    {{ form.block_all_public_ips }}
+                </div>
+        
+            </div>
+            
+            <div id="public-ip-section" class="hidden">
+                <label for="id_number_of_public_ips">Number of Specific Public IPs:</label>
+                {{ form.number_of_public_ips }}
+                
+                <div id="public-ip-fields" class="generator">
+                    <!-- JavaScript will generate IP input fields here -->
+                </div>
+            </div>
+            
+            <button type="submit" class="final">Submit</button>
+        
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const blockAllPrivateIpsRadios = document.querySelectorAll('input[name="block_all_private_ips"]');
+                const numberOfPrivateIpsField = document.getElementById("id_number_of_private_ips");
+                const privateIpSection = document.getElementById("private-ip-section");
+                const privateIpFields = document.getElementById("private-ip-fields");
+
+                const blockAllPublicIpsRadios = document.querySelectorAll('input[name="block_all_public_ips"]');
+                const numberOfPublicIpsField = document.getElementById("id_number_of_public_ips");
+                const publicIpSection = document.getElementById("public-ip-section");
+                const publicIpFields = document.getElementById("public-ip-fields");
+
+                function updatePrivateIpFields() {
+                    privateIpFields.innerHTML = ""; // Clear existing fields
+                    const numberOfIps = parseInt(numberOfPrivateIpsField.value);
+                    if (!isNaN(numberOfIps) && numberOfIps > 0) {
+                        for (let i = 0; i < numberOfIps; i++) {
+                            const ipField = document.createElement("input");
+                            ipField.type = "text";
+                            ipField.name = `private_ip_${i + 1}`;
+                            ipField.placeholder = `Private IP ${i + 1}`;
+                            privateIpFields.appendChild(ipField);
+                            privateIpFields.appendChild(document.createElement("br"));
+                        }
+                        privateIpFields.classList.remove("hidden");
+                    } else {
+                        privateIpFields.classList.add("hidden");
+                    }
+                }
+
+                function updatePublicIpFields() {
+                    publicIpFields.innerHTML = ""; // Clear existing fields
+                    const numberOfIps = parseInt(numberOfPublicIpsField.value);
+                    if (!isNaN(numberOfIps) && numberOfIps > 0) {
+                        for (let i = 0; i < numberOfIps; i++) {
+                            const ipField = document.createElement("input");
+                            ipField.type = "text";
+                            ipField.name = `public_ip_${i + 1}`;
+                            ipField.placeholder = `Public IP ${i + 1}`;
+                            publicIpFields.appendChild(ipField);
+                            publicIpFields.appendChild(document.createElement("br"));
+                        }
+                        publicIpFields.classList.remove("hidden");
+                    } else {
+                        publicIpFields.classList.add("hidden");
+                    }
+                }
+
+                blockAllPrivateIpsRadios.forEach(radio => {
+                    radio.addEventListener("change", function() {
+                        if (radio.value === 'yes') {
+                            privateIpSection.classList.add("hidden");
+                            privateIpFields.classList.add("hidden");
+                        } else {
+                            privateIpSection.classList.remove("hidden");
+                            updatePrivateIpFields();
+                        }
+                    });
+                });
+
+                blockAllPublicIpsRadios.forEach(radio => {
+                    radio.addEventListener("change", function() {
+                        if (radio.value === 'yes') {
+                            publicIpSection.classList.add("hidden");
+                            publicIpFields.classList.add("hidden");
+                        } else {
+                            publicIpSection.classList.remove("hidden");
+                            updatePublicIpFields();
+                        }
+                    });
+                });
+
+                numberOfPrivateIpsField.addEventListener("input", updatePrivateIpFields);
+                numberOfPublicIpsField.addEventListener("input", updatePublicIpFields);
+
+                // Initialize visibility based on initial form state
+                const initialBlockPrivateIpValue = document.querySelector('input[name="block_all_private_ips"]:checked').value;
+                if (initialBlockPrivateIpValue === 'yes') {
+                    privateIpSection.classList.add("hidden");
+                } else {
+                    privateIpSection.classList.remove("hidden");
+                    updatePrivateIpFields();
+                }
+
+                const initialBlockPublicIpValue = document.querySelector('input[name="block_all_public_ips"]:checked').value;
+                if (initialBlockPublicIpValue === 'yes') {
+                    publicIpSection.classList.add("hidden");
+                } else {
+                    publicIpSection.classList.remove("hidden");
+                    updatePublicIpFields();
+                }
+            });
+        </script>
+    </form>
+</body>
+</html>
