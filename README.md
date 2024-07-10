@@ -20,7 +20,7 @@ You can install the Django Gateway Interface package from PyPI using pip. Make s
 pip install gateapp
 
 ```
-Once verify it using and version should be 2.1.4
+Once verify it using and version should be 2.1.5
 
 ```
 pip show gateapp
