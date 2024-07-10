@@ -69,6 +69,8 @@ Run the following command to apply database migrations for the Django app:
 ```
 python manage.py migrate
 ```
+![Screenshot (2)](https://github.com/ankit3388/BlockerGateway/assets/106178304/6c03cca1-fc30-48b1-83ab-787f66a8c68a)
+
 
 **Static Files:**
 Collect static files for the Django app:
