@@ -2,31 +2,59 @@
 
 ## Overview
 
-**Django Gateway Interface** is a Django application designed to provide a user-friendly web interface for configuring gateway settings. This package allows users to easily manage gateway configurations and integrates seamlessly with Nginx for efficient configuration management.
+**Django Gateway Interface** is a Django application designed to provide a user-friendly web interface for configuring Nginx settings for set request limit and IP block. This package enables users to easily manage gateway configurations, specifically to set request limits and block IP addresses at any endpoint for security purposes. It supports both Windows and Linux environments, allowing for seamless integration and efficient configuration management based on user input.
+**Make sure Selected Operating System is same as your working environment** 
 
 ## Features
 
 - User-friendly interface for gateway configuration.
 - Integration with Nginx to apply and manage configurations.
 - Easy installation via PyPI.
+- Support Windows and Linux even in WSL
 
 ## Installation
 
 You can install the Django Gateway Interface package from PyPI using pip. Make sure you have Python 3.8 or higher and Django 3.0 or higher installed.
 
 ```bash
-pip install django-gateway-interface
+pip install gatapp
 ```
+## Requirement
+Make sure your django app is running on http://127.0.0.1:8000
+, needed some modification in setting.py for template and css and follow configuration 
 
-
-## Configuration
+## Configuration 
 Add to Installed Apps:
-Add 'gateway_interface' to your INSTALLED_APPS in your Django settings.py:
+Add 'gateapp' to your INSTALLED_APPS in your Django settings.py:
+
+```
+import os
+```
 
 ```
 INSTALLED_APPS = [
-    # Other installed apps
-    'gateway_interface',
+    ...
+    'gateapp',
+    ...
+]
+```
+```
+TEMPLATES = [
+    {
+        ...
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+
+        ...
+    },
+]
+```
+
+```
+# Optionally include additional static file directories
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  
+  
 ]
 ```
 **Database Migrations**:
@@ -49,7 +77,7 @@ Include the URLs for the Gateway Interface in your Django project urls.py:
 from django.urls import path, include
 urlpatterns = [
     # Other URL patterns
-    path('', include('gateapp.urls'))
+    path('configure/', include('gateapp.urls'))
 ]
 ```
 **Nginx Configuration:**
@@ -80,6 +108,7 @@ server {
 Replace yourdomain.com and file paths with your specific details.
 
 **Usage**
+
 Run the Django Development Server:
 Start the Django development server to test your installation:
 
@@ -88,7 +117,7 @@ python manage.py runserver
 ```
 
 **Access the Interface**:
-Open your web browser and navigate to http://localhost:8000 to access the Gateway Interface.
+Open your web browser and navigate to http://localhost:8000/configure to access the Gateway Interface.
 
 ## Configure Gateway Settings:
 Use the web interface to fill in and submit configuration details for the gateway.
