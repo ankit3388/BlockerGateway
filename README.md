@@ -16,9 +16,17 @@
 
 You can install the Django Gateway Interface package from PyPI using pip. Make sure you have Python 3.8 or higher and Django 3.0 or higher installed.
 
-```bash
-pip install gatapp
 ```
+pip install gateapp
+
+```
+Once verify it using and version should be 2.1.4
+
+```
+pip show gateapp
+
+```
+ 
 ## Requirement
 Make sure your django app is running on http://127.0.0.1:8000
 , needed some modification in setting.py for template and css and follow configuration 
