@@ -28,8 +28,7 @@ pip show gateapp
 ```
  
 ## Requirement
-Make sure your django app is running on http://127.0.0.1:8000
-, needed some modification in setting.py for template and css and follow configuration 
+- Make sure your django app is running on http://127.0.0.1:8000, needed some modification in setting.py for template and css and follow configuration 
 
 ## Configuration 
 Add to Installed Apps:
